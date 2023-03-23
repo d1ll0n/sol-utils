@@ -4,14 +4,10 @@ pragma solidity ^0.8.15;
 import "src/uniswap/interfaces/IUniswapV2Pair.sol";
 import "solady/utils/SafeTransferLib.sol";
 import "solmate/test/utils/mocks/MockERC20.sol";
+import "./UniswapV2ContractsProvider.sol";
 
-contract BasePairTest {
+contract BasePairTest is UniswapV2ContractsProvider {
     using SafeTransferLib for address;
-
-    IUniswapV2Router internal constant uniswapV2Router =
-        IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    IUniswapV2Factory internal constant uniswapV2Factory =
-        IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
 
     address internal token;
     address internal pairedToken;
@@ -59,20 +55,20 @@ contract BasePairTest {
     }
 
     function deployToken(string memory suffix) internal returns (address) {
-        MockERC20 token = new MockERC20(
+        MockERC20 _token = new MockERC20(
             string.concat("Token ", suffix),
             string.concat("TKN", suffix),
             18
         );
-        token.mint(address(this), 1_000_000e18);
-        return address(token);
+        _token.mint(address(this), 1_000_000e18);
+        return address(_token);
     }
 
     function _mint(address to, uint256 amount) internal virtual {
-        OwnedERC20(token).mint(to, amount);
+        MockERC20(token).mint(to, amount);
     }
 
     function _mintPaired(address to, uint256 amount) internal virtual {
-        OwnedERC20(pairedToken).mint(to, amount);
+        MockERC20(pairedToken).mint(to, amount);
     }
 }

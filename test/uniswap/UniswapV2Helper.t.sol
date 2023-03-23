@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "src/uniswap/UniswapV2Helper.sol";
+import "./helpers/UniswapV2HelperWrapper.sol";
 import "./helpers/ReferenceUniswapV2Helper.sol";
 import "./helpers/MockUniswapV2Pair.sol";
 import "./helpers/BasePairTest.sol";
@@ -346,9 +346,9 @@ contract UniswapV2HelperTest is Test, BasePairTest {
         tokenIn.safeTransfer(pair, amountIn);
 
         helper.executeV2Swap(pair, swapZeroForOne, amountOut);
-        assertEq(tokenIn.balanceOf(from), 0);
-        assertEq(tokenIn.balanceOf(address(helper)), 0);
-        assertEq(tokenOut.balanceOf(address(helper)), amountOut);
+        assertEq(tokenIn.balanceOf(from), 0, "sender balance tokenIn");
+        assertEq(tokenIn.balanceOf(address(helper)), 0, "helper balance tokenIn");
+        assertEq(tokenOut.balanceOf(address(helper)), amountOut, "helper balance tokenOut");
     }
 
     function testFailExecuteV2SwapOverflow(
