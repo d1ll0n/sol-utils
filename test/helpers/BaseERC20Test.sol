@@ -2,8 +2,8 @@
 pragma solidity >=0.8.17;
 
 import "src/interfaces/IERC20Metadata.sol";
-import { DSTestPlus } from "src/solmate/test/utils/DSTestPlus.sol";
-import { DSInvariantTest } from "src/solmate/test/utils/DSInvariantTest.sol";
+import { DSTestPlus } from "solmate/test/utils/DSTestPlus.sol";
+import { DSInvariantTest } from "solmate/test/utils/DSInvariantTest.sol";
 
 bytes32 constant PERMIT_TYPEHASH = keccak256(
     "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
