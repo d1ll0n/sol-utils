@@ -16,6 +16,8 @@ using MemoryWriters for MemoryPointer global;
 //   eq
 // } for MemoryPointer global;
 
+MemoryPointer constant ScratchPtr1 = MemoryPointer.wrap(0x00);
+MemoryPointer constant ScratchPtr2 = MemoryPointer.wrap(0x20);
 MemoryPointer constant FreeMemoryPPtr = MemoryPointer.wrap(0x40);
 uint256 constant IdentityPrecompileAddress = 0x4;
 uint256 constant OffsetOrLengthMask = 0xffffffff;

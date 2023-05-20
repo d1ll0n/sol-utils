@@ -13,6 +13,8 @@ using ReturndataPointerLib for ReturndataPointer global;
 
 using ReturndataReaders for ReturndataPointer global;
 
+ReturndataPointer constant ReturndataStart = ReturndataPointer.wrap(0x00);
+
 // using {
 //   lt as <,
 //   gt as >,

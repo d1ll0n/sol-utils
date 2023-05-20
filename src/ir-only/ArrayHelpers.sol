@@ -27,18 +27,42 @@ library ArrayHelpers {
         unchecked {
             uint256 length = array.readUint256();
 
-            newArray = malloc((length + 1) * 32);
+            newArray = getFreeMemoryPointer();
+            // newArray = malloc((length << 5) + 32);
             newArray.write(length);
 
             MemoryPointer srcPosition = array.next();
-            MemoryPointer srcEnd = srcPosition.offset(length * 0x20);
+            MemoryPointer srcEnd = srcPosition.offset(length << 5);
             MemoryPointer dstPosition = newArray.next();
 
             while (srcPosition.lt(srcEnd)) {
                 dstPosition.write(fn(srcPosition.readUint256()));
-                srcPosition = srcPosition.next();
                 dstPosition = dstPosition.next();
+                srcPosition = srcPosition.next();
             }
+            setFreeMemoryPointer(dstPosition);
+        }
+    }
+
+    function map2(
+        MemoryPointer array,
+        /* function (uint256 value) returns (uint256 newValue) */
+        function(uint256) internal pure returns (uint256) fn
+    ) internal pure returns (MemoryPointer newArray) {
+        unchecked {
+            uint256 length = array.readUint256();
+
+            newArray = getFreeMemoryPointer();
+            newArray.write(length);
+
+            uint256 size = (length << 5) + 32;
+            uint256 offset = 32;
+
+            while (offset < size) {
+                newArray.offset(offset).write(fn(array.offset(offset).readUint256()));
+                offset += 32;
+            }
+            setFreeMemoryPointer(newArray.offset(offset));
         }
     }
 
