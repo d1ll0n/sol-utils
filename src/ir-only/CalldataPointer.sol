@@ -11,18 +11,16 @@ type CalldataPointer is uint256;
 
 using CalldataPointerLib for CalldataPointer global;
 using CalldataReaders for CalldataPointer global;
-// using {
-//   lt as <,
-//   gt as >,
-//   eq as ==,
-//   lt,
-//   gt,
-//   eq
-// } for CalldataPointer global;
 
 CalldataPointer constant CalldataStart = CalldataPointer.wrap(0x04);
 
 library CalldataPointerLib {
+    function isNull(CalldataPointer a) internal pure returns (bool b) {
+        assembly {
+            b := iszero(a)
+        }
+    }
+
     function lt(
         CalldataPointer a,
         CalldataPointer b
@@ -50,22 +48,14 @@ library CalldataPointerLib {
         }
     }
 
-    function isNull(CalldataPointer a) internal pure returns (bool b) {
-        assembly {
-            b := iszero(a)
-        }
-    }
-
-    /// @dev Resolves an offset stored at `cdPtr + headOffset` to a calldata.
-    ///      pointer `cdPtr` must point to some parent object with a dynamic
-    ///      type's head stored at `cdPtr + headOffset`.
+    /// @dev Resolves an offset stored at `cdPtr + headOffset` to a calldata pointer.
+    ///      `cdPtr` must point to some parent object with a dynamic type's head
+    ///      stored at `cdPtr + headOffset`.
     function pptr(
         CalldataPointer cdPtr,
         uint256 headOffset
     ) internal pure returns (CalldataPointer cdPtrChild) {
-        cdPtrChild = cdPtr.offset(
-            cdPtr.offset(headOffset).readUint256() & OffsetOrLengthMask
-        );
+        cdPtrChild = cdPtr.offset(cdPtr.offset(headOffset).readMaskedUint32());
     }
 
     /// @dev Resolves an offset stored at `cdPtr` to a calldata pointer.
@@ -74,7 +64,7 @@ library CalldataPointerLib {
     function pptr(
         CalldataPointer cdPtr
     ) internal pure returns (CalldataPointer cdPtrChild) {
-        cdPtrChild = cdPtr.offset(cdPtr.readUint256() & OffsetOrLengthMask);
+        cdPtrChild = cdPtr.offset(cdPtr.readMaskedUint32());
     }
 
     /// @dev Returns the calldata pointer one word after `cdPtr`.
@@ -111,8 +101,8 @@ library CalldataPointerLib {
 
 library CalldataReaders {
     /// @dev Reads the value at `cdPtr` and applies a mask to return only the
-    ///    last 4 bytes.
-    function readMaskedUint256(
+    ///      last 4 bytes.
+    function readMaskedUint32(
         CalldataPointer cdPtr
     ) internal pure returns (uint256 value) {
         value = cdPtr.readUint256() & OffsetOrLengthMask;

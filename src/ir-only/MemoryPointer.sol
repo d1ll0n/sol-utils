@@ -7,15 +7,6 @@ using MemoryPointerLib for MemoryPointer global;
 using MemoryReaders for MemoryPointer global;
 using MemoryWriters for MemoryPointer global;
 
-// using {
-//   lt as <,
-//   gt as >,
-//   eq as ==,
-//   lt,
-//   gt,
-//   eq
-// } for MemoryPointer global;
-
 MemoryPointer constant ScratchPtr1 = MemoryPointer.wrap(0x00);
 MemoryPointer constant ScratchPtr2 = MemoryPointer.wrap(0x20);
 MemoryPointer constant FreeMemoryPPtr = MemoryPointer.wrap(0x40);
@@ -48,37 +39,32 @@ function setFreeMemoryPointer(MemoryPointer mPtr) pure {
 }
 
 library MemoryPointerLib {
-    function lt(
-        MemoryPointer a,
-        MemoryPointer b
-    ) internal pure returns (bool c) {
+    function isNull(MemoryPointer a) internal pure returns (bool b) {
+        assembly {
+            b := iszero(a)
+        }
+    }
+
+    function lt(MemoryPointer a, MemoryPointer b) internal pure returns (bool c) {
         assembly {
             c := lt(a, b)
         }
     }
-
-    function gt(
-        MemoryPointer a,
-        MemoryPointer b
-    ) internal pure returns (bool c) {
+    
+    function gt(MemoryPointer a, MemoryPointer b) internal pure returns (bool c) {
         assembly {
             c := gt(a, b)
         }
     }
-
-    function eq(
-        MemoryPointer a,
-        MemoryPointer b
-    ) internal pure returns (bool c) {
+    
+    function eq(MemoryPointer a, MemoryPointer b) internal pure returns (bool c) {
         assembly {
             c := eq(a, b)
         }
     }
 
-    function isNull(MemoryPointer a) internal pure returns (bool b) {
-        assembly {
-            b := iszero(a)
-        }
+    function copy(MemoryPointer src, MemoryPointer dst) internal pure {
+        dst.write(src.readUint256());
     }
 
     function copy(
@@ -138,6 +124,21 @@ library MemoryPointerLib {
     ) internal pure returns (MemoryPointer mPtrChild) {
         mPtrChild = mPtr.readMemoryPointer();
     }
+
+    function clear(MemoryPointer mPtr, uint256 size) internal pure {
+        assembly {
+            calldatacopy(mPtr, calldatasize(), size)
+        }
+    }
+
+    function hash(
+        MemoryPointer mPtr,
+        uint256 size
+    ) internal pure returns (bytes32 result) {
+        assembly {
+            result := keccak256(mPtr, size)
+        }
+    }
 }
 
 library MemoryReaders {
@@ -151,7 +152,7 @@ library MemoryReaders {
     }
 
     /// @dev Reads value at `mPtr` & applies a mask to return only last 4 bytes
-    function readMaskedUint256(
+    function readMaskedUint32(
         MemoryPointer mPtr
     ) internal pure returns (uint256 value) {
         value = mPtr.readUint256() & OffsetOrLengthMask;

@@ -15,46 +15,28 @@ using ReturndataReaders for ReturndataPointer global;
 
 ReturndataPointer constant ReturndataStart = ReturndataPointer.wrap(0x00);
 
-// using {
-//   lt as <,
-//   gt as >,
-//   eq as ==,
-//   lt,
-//   gt,
-//   eq
-// } for ReturndataPointer global;
-
 library ReturndataPointerLib {
-    function lt(
-        ReturndataPointer a,
-        ReturndataPointer b
-    ) internal pure returns (bool c) {
+    function isNull(ReturndataPointer a) internal pure returns (bool b) {
+        assembly {
+            b := iszero(a)
+        }
+    }
+
+    function lt(ReturndataPointer a, ReturndataPointer b) internal pure returns (bool c) {
         assembly {
             c := lt(a, b)
         }
     }
-
-    function gt(
-        ReturndataPointer a,
-        ReturndataPointer b
-    ) internal pure returns (bool c) {
+    
+    function gt(ReturndataPointer a, ReturndataPointer b) internal pure returns (bool c) {
         assembly {
             c := gt(a, b)
         }
     }
-
-    function eq(
-        ReturndataPointer a,
-        ReturndataPointer b
-    ) internal pure returns (bool c) {
+    
+    function eq(ReturndataPointer a, ReturndataPointer b) internal pure returns (bool c) {
         assembly {
             c := eq(a, b)
-        }
-    }
-
-    function isNull(ReturndataPointer a) internal pure returns (bool b) {
-        assembly {
-            b := iszero(a)
         }
     }
 
@@ -113,7 +95,7 @@ library ReturndataPointerLib {
 
 library ReturndataReaders {
     /// @dev Reads value at `rdPtr` & applies a mask to return only last 4 bytes
-    function readMaskedUint256(
+    function readMaskedUint32(
         ReturndataPointer rdPtr
     ) internal pure returns (uint256 value) {
         value = rdPtr.readUint256() & OffsetOrLengthMask;
