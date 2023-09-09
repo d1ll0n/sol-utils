@@ -4,7 +4,7 @@ pragma solidity >=0.8.17;
 import { Test } from "forge-std/Test.sol";
 import "src/ir-only/ArrayCasts.sol";
 import "src/ir-only/ArrayHelpers.sol";
-import "src/test/utils/MemoryPointerAssertions.sol";
+import "src/test/MemoryPointerAssertions.sol";
 
 contract ArrayHelpersTest is Test, MemoryPointerAssertions {
     using ArrayCasts for *;
