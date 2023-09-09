@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
+
 import { PairAddress } from "./PairAddress.sol";
-import "./interfaces/IUniswapV2Pair.sol";
 import "./UniswapConstants.sol";
 import "../errors/ErrorConstants.sol";
 
@@ -257,8 +257,8 @@ library UniswapV2Helper {
         bool zeroForOne,
         uint256 amountIn
     ) internal returns (uint256 amountOut) {
-      amountOut = getV2AmountOut(pair, zeroForOne, amountIn);
-      executeV2Swap(pair, zeroForOne, amountOut);
+        amountOut = getV2AmountOut(pair, zeroForOne, amountIn);
+        executeV2Swap(pair, zeroForOne, amountOut);
     }
 
     function executeV2Mint(
@@ -284,6 +284,27 @@ library UniswapV2Helper {
                 revert(0, returndatasize())
             }
             liquidity := mload(UniswapV2_Mint_Returndata_Pointer)
+        }
+    }
+
+    function executeV2Sync(address pair) internal {
+        assembly {
+            mstore(UniswapV2_Sync_Selector_Pointer, UniswapV2_Sync_Selector)
+
+            let callStatus := call(
+                gas(),
+                pair,
+                0,
+                UniswapV2_Sync_Calldata_Pointer,
+                UniswapV2_Sync_Calldata_Size,
+                0,
+                0
+            )
+            // If call failed, revert.
+            if iszero(callStatus) {
+                returndatacopy(0, 0, returndatasize())
+                revert(0, returndatasize())
+            }
         }
     }
 }
