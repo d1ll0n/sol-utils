@@ -2,3 +2,4 @@ forge-std/=lib/forge-std/src/
 solmate/=lib/solmate/src/
 src/=src/
 solady/=lib/solady/src/
+openzeppelin/=lib/openzeppelin-contracts/
