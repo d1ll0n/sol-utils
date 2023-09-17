@@ -58,6 +58,10 @@ library EnumerableSetLib {
         }
     }
 
+    /* ========================================================================== */
+    /*                                 Bytes32 Set                                */
+    /* ========================================================================== */
+
     function indexOf(
         Bytes32Set storage set,
         bytes32 value
@@ -250,7 +254,9 @@ library EnumerableSetLib {
         }
     }
 
-    // === AddressSet ===
+    /* ========================================================================== */
+    /*                                 Address Set                                */
+    /* ========================================================================== */
 
     function indexOf(
         AddressSet storage set,
@@ -306,7 +312,10 @@ library EnumerableSetLib {
         return values(set.asBytes32Set()).asAddressArray();
     }
 
-    // === UintSet ===
+    /* ========================================================================== */
+    /*                                  Uint Set                                  */
+    /* ========================================================================== */
+
     function indexOf(
         UintSet storage set,
         uint256 value
