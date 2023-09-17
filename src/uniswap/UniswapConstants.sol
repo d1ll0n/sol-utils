@@ -77,11 +77,9 @@ uint256 constant UniswapV2_Burn_Amount1_Pointer = 0x20;
 uint256 constant UniswapV2_Burn_Selector_Pointer = 0x00;
 uint256 constant UniswapV2_Burn_Recipient_Pointer = 0x20;
 
-
 // =====================================================================//
 //                    getReserves()                                     //
 // =====================================================================//
-
 
 uint256 constant UniswapV2_GetReserves_Selector = 0x0902f1ac;
 
@@ -93,19 +91,37 @@ uint256 constant UniswapV2_GetReserves_Returndata_Reserves0_Pointer = 0x00;
 uint256 constant UniswapV2_GetReserves_Returndata_Reserves1_Pointer = 0x20;
 uint256 constant UniswapV2_GetReserves_Returndata_Size = 0x40;
 
-uint256 constant UniswapV2_Create2Prefix = 0xff5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f; // 0xff + factory address
-uint256 constant UniswapV2_InitCodeHash = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
+uint256 constant UniswapV2_Create2Prefix = (
+  0x0000000000000000000000ff5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f
+); // 0xff + factory address
+uint256 constant UniswapV2_InitCodeHash = (
+  0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f
+);
 
-uint256 constant Sushiswap_Create2Prefix = 0xffc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac; // 0xff + factory address
-uint256 constant Sushiswap_InitCodeHash = 0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303;
+uint256 constant Sushiswap_Create2Prefix = (
+  0x0000000000000000000000ffc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac
+); // 0xff + factory address
+uint256 constant Sushiswap_InitCodeHash = (
+  0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303
+);
 
-uint256 constant UniswapV3_Create2Prefix = 0xff1f98431c8ad98523631ae4a59f267346ea31f984; // 0xff + factory address
-uint256 constant UniswapV3_InitCodeHash = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
+uint256 constant UniswapV3_Create2Prefix = (
+  0x0000000000000000000000ff1f98431c8ad98523631ae4a59f267346ea31f984
+); // 0xff + factory address
+uint256 constant UniswapV3_InitCodeHash = (
+  0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54
+);
 
-uint256 constant BaseSwap_Create2Prefix = 0xfffda619b6d20975be80a10332cd39b9a4b0faa8bb; // 0xff + factory address
-uint256 constant BaseSwap_InitCodeHash = 0xb618a2730fae167f5f8ac7bd659dd8436d571872655bcb6fd11f2158c8a64a3b;
+uint256 constant BaseSwap_Create2Prefix = (
+  0x0000000000000000000000fffda619b6d20975be80a10332cd39b9a4b0faa8bb
+); // 0xff + factory address
+uint256 constant BaseSwap_InitCodeHash = (
+  0xb618a2730fae167f5f8ac7bd659dd8436d571872655bcb6fd11f2158c8a64a3b
+);
 
-uint256 constant QuickSwap_Create2Prefix = 0xff5757371414417b8c6caad45baef941abc7d3ab32; // 0xff + factory address
+uint256 constant QuickSwap_Create2Prefix = (
+  0x0000000000000000000000ff5757371414417b8c6caad45baef941abc7d3ab32
+); // 0xff + factory address
 uint256 constant QuickSwap_InitCodeHash = UniswapV2_InitCodeHash;
 
 uint256 constant Create2_Prefix_Offset = 0x00;
@@ -114,7 +130,8 @@ uint256 constant Create2_InitCodeHash_Offset = 0x40;
 uint256 constant Create2_Offset = 0x0b;
 uint256 constant Create2_Size = 0x55;
 
-uint256 constant V2_pairSalt_Token1_WriteOffset = 0x14; // Memory position to write token1 when calculating pair hash
+// Memory position to write token1 when calculating pair hash
+uint256 constant V2_pairSalt_Token1_WriteOffset = 0x14;
 uint256 constant V2_pairSalt_Token0_WriteOffset = 0x00;
 uint256 constant V2_pairSalt_Offset = 0x0c;
 uint256 constant V2_pairSalt_Size = 0x28;

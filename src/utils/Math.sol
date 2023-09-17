@@ -5,14 +5,14 @@ pragma solidity ^0.8.17;
  * @dev Return the smaller of `a` and `b`
  */
 function min(uint256 a, uint256 b) pure returns (uint256 c) {
-    c = ternary(a < b, a, b);
+  c = ternary(a < b, a, b);
 }
 
 /**
  * @dev Return the larger of `a` and `b`.
  */
 function max(uint256 a, uint256 b) pure returns (uint256 c) {
-    c = ternary(a < b, b, a);
+  c = ternary(a < b, b, a);
 }
 
 /**
@@ -20,11 +20,11 @@ function max(uint256 a, uint256 b) pure returns (uint256 c) {
  * if it is positive or zero if it underflows.
  */
 function satSub(uint256 a, uint256 b) pure returns (uint256 c) {
-    assembly {
-        // (a > b) * (a - b)
-        // If a-b underflows, the product will be zero
-        c := mul(gt(a, b), sub(a, b))
-    }
+  assembly {
+    // (a > b) * (a - b)
+    // If a-b underflows, the product will be zero
+    c := mul(gt(a, b), sub(a, b))
+  }
 }
 
 /**
@@ -32,11 +32,11 @@ function satSub(uint256 a, uint256 b) pure returns (uint256 c) {
  *      Equivalent to `condition ? valueIfTrue : valueIfFalse`
  */
 function ternary(
-    bool condition,
-    uint256 valueIfTrue,
-    uint256 valueIfFalse
+  bool condition,
+  uint256 valueIfTrue,
+  uint256 valueIfFalse
 ) pure returns (uint256 c) {
-    assembly {
-        c := add(valueIfFalse, mul(condition, sub(valueIfTrue, valueIfFalse)))
-    }
+  assembly {
+    c := add(valueIfFalse, mul(condition, sub(valueIfTrue, valueIfFalse)))
+  }
 }

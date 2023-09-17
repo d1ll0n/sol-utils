@@ -64,7 +64,7 @@ abstract contract BaseEnumerableSetTest is Test {
   }
 
   function testRemoveNonExistentValue() external {
-    assertFalse(_set.remove(ValueA), "remove nonexistent not false");
+    assertFalse(_set.remove(ValueA), 'remove nonexistent not false');
   }
 
   function testAddAndRemoveMultipleValues() external {
