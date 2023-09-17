@@ -34,6 +34,10 @@ contract UintSetHarness {
   function values() external view returns (uint256[] memory arr) {
     return _set.values();
   }
+
+  function slice(uint256 start, uint256 end) external view returns (uint256[] memory arr) {
+    return _set.slice(start, end);
+  }
 }
 
 contract UintSetHarnessOZ {
@@ -67,5 +71,18 @@ contract UintSetHarnessOZ {
 
   function values() public view returns (uint256[] memory) {
     return _set.values();
+  }
+
+  function slice(uint256 start, uint256 end) external view returns (uint256[] memory arr) {
+    uint256 len = _set.length();
+    end = min(end, len);
+    uint256 size = end - start;
+    arr = new uint256[](size);
+    for (uint256 i = 0; i < size; ) {
+      arr[i] = _set.at(start + i);
+      unchecked {
+        i++;
+      }
+    }
   }
 }

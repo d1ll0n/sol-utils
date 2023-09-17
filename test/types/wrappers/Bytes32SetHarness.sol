@@ -34,6 +34,10 @@ contract Bytes32SetHarness {
   function values() external view returns (bytes32[] memory arr) {
     return _set.values();
   }
+
+  function slice(uint256 start, uint256 end) external view returns (bytes32[] memory arr) {
+    return _set.slice(start, end);
+  }
 }
 
 contract Bytes32SetHarnessOZ {
@@ -67,5 +71,18 @@ contract Bytes32SetHarnessOZ {
 
   function values() public view returns (bytes32[] memory) {
     return _set.values();
+  }
+
+  function slice(uint256 start, uint256 end) external view returns (bytes32[] memory arr) {
+    uint256 len = _set.length();
+    end = min(end, len);
+    uint256 size = end - start;
+    arr = new bytes32[](size);
+    for (uint256 i = 0; i < size; ) {
+      arr[i] = _set.at(start + i);
+      unchecked {
+        i++;
+      }
+    }
   }
 }

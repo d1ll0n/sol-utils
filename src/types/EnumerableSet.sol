@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
-
+import '../utils/Math.sol';
 import '../utils/ErrorConstants.sol';
 
 struct Bytes32Set {
@@ -225,6 +225,38 @@ library EnumerableSetLib {
     }
   }
 
+  function slice(
+    Bytes32Set storage set,
+    uint256 start,
+    uint256 end
+  ) internal view returns (bytes32[] memory arr) {
+    end = min(end, set.length());
+    assembly {
+      if gt(start, end) {
+        mstore(0, Panic_ErrorSelector)
+        mstore(Panic_ErrorCodePointer, Panic_Arithmetic)
+        revert(Error_SelectorPointer, Panic_ErrorLength)
+      }
+      let size := sub(end, start)
+      arr := mload(0x40)
+      mstore(arr, size)
+      mstore(0, set.slot)
+      let nextValueSlot := add(keccak256(0, 32), start)
+      let pointer := add(arr, 32)
+      let endPointer := add(pointer, shl(5, size))
+      mstore(0x40, endPointer)
+      for {
+
+      } lt(pointer, endPointer) {
+
+      } {
+        mstore(pointer, sload(nextValueSlot))
+        pointer := add(pointer, 32)
+        nextValueSlot := add(nextValueSlot, 1)
+      }
+    }
+  }
+
   /* ========================================================================== */
   /*                                 Address Set                                */
   /* ========================================================================== */
@@ -261,6 +293,14 @@ library EnumerableSetLib {
     return values(set.asBytes32Set()).asAddressArray();
   }
 
+  function slice(
+    AddressSet storage set,
+    uint256 start,
+    uint256 end
+  ) internal view returns (address[] memory arr) {
+    return slice(set.asBytes32Set(), start, end).asAddressArray();
+  }
+
   /* ========================================================================== */
   /*                                  Uint Set                                  */
   /* ========================================================================== */
@@ -295,6 +335,14 @@ library EnumerableSetLib {
 
   function values(UintSet storage set) internal view returns (uint256[] memory) {
     return values(set.asBytes32Set()).asUintArray();
+  }
+
+  function slice(
+    UintSet storage set,
+    uint256 start,
+    uint256 end
+  ) internal view returns (uint256[] memory arr) {
+    return slice(set.asBytes32Set(), start, end).asUintArray();
   }
 
   // === Type Casts ===

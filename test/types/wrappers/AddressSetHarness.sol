@@ -38,6 +38,10 @@ contract AddressSetHarness {
   function internalValues() external view returns (address[] memory arr) {
     return _set._values;
   }
+
+  function slice(uint256 start, uint256 end) external view returns (address[] memory arr) {
+    return _set.slice(start, end);
+  }
 }
 
 contract AddressSetHarnessOZ {
@@ -77,6 +81,19 @@ contract AddressSetHarnessOZ {
     bytes32[] memory _arr = _set._inner._values;
     assembly {
       arr := _arr
+    }
+  }
+
+  function slice(uint256 start, uint256 end) external view returns (address[] memory arr) {
+    uint256 len = _set.length();
+    end = min(end, len);
+    uint256 size = end - start;
+    arr = new address[](size);
+    for (uint256 i = 0; i < size; ) {
+      arr[i] = _set.at(start + i);
+      unchecked {
+        i++;
+      }
     }
   }
 }

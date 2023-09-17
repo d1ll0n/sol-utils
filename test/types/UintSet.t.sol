@@ -12,6 +12,8 @@ abstract contract BaseEnumerableSetTest is Test {
   ISet internal _set;
   bytes internal ArrayOutOfBoundsError =
     abi.encodePacked(bytes4(bytes32(Panic_ErrorSelector << 224)), Panic_ArrayOutOfBounds);
+  bytes internal ArithmeticError =
+    abi.encodePacked(bytes4(bytes32(Panic_ErrorSelector << 224)), Panic_Arithmetic);
 
   function membersMatch(uint256[] memory values) internal {
     assertEq(_set.length(), values.length);
@@ -110,6 +112,29 @@ abstract contract BaseEnumerableSetTest is Test {
 
     assertFalse(_set.contains(ValueB));
   }
+
+  function testSlice() external {
+    _set.add(ValueA);
+    _set.add(ValueB);
+    _set.add(ValueC);
+    vm.expectRevert(ArithmeticError);
+    _set.slice(4, 1);
+    uint256[] memory arr = new uint256[](3);
+    arr[0] = ValueA;
+    arr[1] = ValueB;
+    arr[2] = ValueC;
+    assertEq(_set.slice(0, 3), arr);
+    assertEq(_set.slice(0, 4), arr);
+    assertEq(_set.slice(0, 0), new uint256[](0));
+    assertEq(_set.slice(1, 1), new uint256[](0));
+    assembly {
+      mstore(arr, 2)
+    }
+    assertEq(_set.slice(0, 2), arr);
+    arr[0] = ValueB;
+    arr[1] = ValueC;
+    assertEq(_set.slice(1, 3), arr);
+  }
 }
 
 contract EnumerableSetTest is BaseEnumerableSetTest {
@@ -138,4 +163,6 @@ interface ISet {
   function remove(uint256 value) external returns (bool);
 
   function values() external view returns (uint256[] memory);
+
+  function slice(uint256 start, uint256 end) external view returns (uint256[] memory);
 }
