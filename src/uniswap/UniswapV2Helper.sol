@@ -3,7 +3,7 @@ pragma solidity >=0.8.17;
 
 import { PairAddress } from "./PairAddress.sol";
 import "./UniswapConstants.sol";
-import "../errors/ErrorConstants.sol";
+import "../utils/ErrorConstants.sol";
 
 library UniswapV2Helper {
     function calculateV2AmountOut(
@@ -48,11 +48,11 @@ library UniswapV2Helper {
             amountOut := div(numerator, denominator)
             if errorBuffer {
                 // Store the Panic error signature.
-                mstore(0, Panic_error_selector)
+                mstore(0, Panic_ErrorSelector)
                 // Store the arithmetic (0x11) panic code.
-                mstore(Panic_error_code_ptr, Panic_arithmetic)
+                mstore(Panic_ErrorCodePointer, Panic_Arithmetic)
                 // revert(abi.encodeWithSignature("Panic(uint256)", 0x11))
-                revert(Error_selector_offset, Panic_error_length)
+                revert(Error_SelectorPointer, Panic_ErrorLength)
             }
         }
     }
@@ -109,11 +109,11 @@ library UniswapV2Helper {
             amountIn := add(div(numerator, denominator), 1)
             if errorBuffer {
                 // Store the Panic error signature.
-                mstore(0, Panic_error_selector)
+                mstore(0, Panic_ErrorSelector)
                 // Store the arithmetic (0x11) panic code.
-                mstore(Panic_error_code_ptr, Panic_arithmetic)
+                mstore(Panic_ErrorCodePointer, Panic_Arithmetic)
                 // revert(abi.encodeWithSignature("Panic(uint256)", 0x11))
-                revert(Error_selector_offset, Panic_error_length)
+                revert(Error_SelectorPointer, Panic_ErrorLength)
             }
         }
     }
